@@ -17,12 +17,12 @@ for ($i = 2; $i < $argc; $i++)
     $value = preg_split("/=/", $argv[$i])[0];
     $lenvalue = strlen($value);
 
-    if (strncmp($sMax, $value, min($lenMax, $lenvalue)) === -1)
+    if (strncmp($sMax, $value, max($lenMax, $lenvalue)) === -1)
     {
         $sMax = $value;
     } 
 
-    if (strncmp($sMin, $value, min($lenMin, $lenvalue)) === 1)
+    if (strncmp($sMin, $value, max($lenMin, $lenvalue)) === 1)
     {
         $sMin = $value;
     }
