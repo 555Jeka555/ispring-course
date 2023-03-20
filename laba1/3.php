@@ -14,3 +14,4 @@ for ($i = 0; $i < count($arrayStr) - 1; $i++)
     echo $arrayStr[$i] . " ";
 }
 echo $arrayStr[count($arrayStr) - 1];
+echo ";";
