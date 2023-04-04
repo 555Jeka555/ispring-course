@@ -32,7 +32,8 @@ if (isset($_POST["email"]))
 {
     $email = $_POST["email"];
     $user["email"] = $email;
-    if (!str_contains($email, "@mail.ru")) $error = true;
+    $email_validation_regex = '/^\\S+@\\S+\\.\\S+$/'; 
+    if (!(preg_match($email_validation_regex, $email))) $error = true;
 }
 if (isset($_POST["phone"]))
 {
@@ -54,7 +55,7 @@ if (!$error)
         if (count($userCheck) == 0) continue;
 
         // Проверит если есть пользователь с такой же почтой И с таким же номером
-        if ($userCheck["email"] == $user["email"] or $userCheck["phone"] == $user["phone"])
+        if ($userCheck["email"] == $user["email"] || $userCheck["phone"] == $user["phone"])
         {
             echo "Такой пользователь уже зарегистрирован";
             $error = true;
