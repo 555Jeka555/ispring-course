@@ -24,53 +24,53 @@ require_once(__DIR__ . "/User.php");
 function collectData(array $userParams): array|null
 {
     $error = false;
-    if (isset($_GET["second_name"]))
+    if (isset($_POST["second_name"]))
     {
-        $second_name = $_GET["second_name"];
+        $second_name = $_POST["second_name"];
         $userParams["second_name"] = $second_name;
         if (count(array_filter(str_split($second_name), "is_numeric")) > 0 ) $error = true;
     }
-    if (isset($_GET["first_name"]))
+    if (isset($_POST["first_name"]))
     {
-        $first_name = $_GET["first_name"];
+        $first_name = $_POST["first_name"];
         $userParams["first_name"] = $first_name;
         if (count(array_filter(str_split($first_name), "is_numeric")) > 0) $error = true;
     }
-    if (isset($_GET["middle_name"]))
+    if (isset($_POST["middle_name"]))
     {
-        $middle_name = $_GET["middle_name"];
+        $middle_name = $_POST["middle_name"];
         $userParams["middle_name"] = $middle_name;
         if (count(array_filter(str_split($middle_name), "is_numeric")) > 0) $error = true;
     }
-    if (isset($_GET["gender"]))
+    if (isset($_POST["gender"]))
     {
-        $gender = $_GET["gender"];
+        $gender = $_POST["gender"];
         $userParams["gender"] = $gender;
     }
-    if (isset($_GET["birth_date"]))
+    if (isset($_POST["birth_date"]))
     {
-        $birth_date = $_GET["birth_date"];
+        $birth_date = $_POST["birth_date"];
         $userParams["birth_date"] = $birth_date;
     }
-    if (isset($_GET["email"]))
+    if (isset($_POST["email"]))
     {
-        $email = $_GET["email"];
+        $email = $_POST["email"];
         $userParams["email"] = $email;
         $email_validation_regex = '/^\\S+@\\S+\\.\\S+$/'; 
         if (!(preg_match($email_validation_regex, $email))) $error = true;
     }
-    if (isset($_GET["phone"]))
+    if (isset($_POST["phone"]))
     {
-        $phone = $_GET["phone"];
+        $phone = $_POST["phone"];
         if (!is_numeric($phone)) $error = true;
         if (!$error)
         {
             $userParams["phone"] = (int)$phone;
         }
     }
-    if (isset($_GET["avatar_path"]))
+    if (isset($_POST["avatar_path"]))
     {
-        $avatar_path = $_GET["avatar_path"];
+        $avatar_path = $_POST["avatar_path"];
         $userParams["avatar_path"] = $avatar_path;
     }
 
@@ -88,53 +88,53 @@ function collectDataInClass(): User|null
 {
     $error = false;
     $userParams = [];
-    if (isset($_GET["second_name"]))
+    if (isset($_POST["second_name"]))
     {
-        $second_name = $_GET["second_name"];
+        $second_name = $_POST["second_name"];
         $userParams["second_name"] = $second_name;
         if (count(array_filter(str_split($second_name), "is_numeric")) > 0 ) $error = true;
     }
-    if (isset($_GET["first_name"]))
+    if (isset($_POST["first_name"]))
     {
-        $first_name = $_GET["first_name"];
+        $first_name = $_POST["first_name"];
         $userParams["first_name"] = $first_name;
         if (count(array_filter(str_split($first_name), "is_numeric")) > 0) $error = true;
     }
-    if (isset($_GET["middle_name"]))
+    if (isset($_POST["middle_name"]))
     {
-        $middle_name = $_GET["middle_name"];
+        $middle_name = $_POST["middle_name"];
         $userParams["middle_name"] = $middle_name;
         if (count(array_filter(str_split($middle_name), "is_numeric")) > 0) $error = true;
     }
-    if (isset($_GET["gender"]))
+    if (isset($_POST["gender"]))
     {
-        $gender = $_GET["gender"];
+        $gender = $_POST["gender"];
         $userParams["gender"] = $gender;
     }
-    if (isset($_GET["birth_date"]))
+    if (isset($_POST["birth_date"]))
     {
-        $birth_date = $_GET["birth_date"];
+        $birth_date = $_POST["birth_date"];
         $userParams["birth_date"] = $birth_date;
     }
-    if (isset($_GET["email"]))
+    if (isset($_POST["email"]))
     {
-        $email = $_GET["email"];
+        $email = $_POST["email"];
         $userParams["email"] = $email;
         $email_validation_regex = '/^\\S+@\\S+\\.\\S+$/'; 
         if (!(preg_match($email_validation_regex, $email))) $error = true;
     }
-    if (isset($_GET["phone"]))
+    if (isset($_POST["phone"]))
     {
-        $phone = $_GET["phone"];
+        $phone = $_POST["phone"];
         if (!is_numeric($phone)) $error = true;
         if (!$error)
         {
             $userParams["phone"] = (int)$phone;
         }
     }
-    if (isset($_GET["avatar_path"]))
+    if (isset($_POST["avatar_path"]))
     {
-        $avatar_path = $_GET["avatar_path"];
+        $avatar_path = $_POST["avatar_path"];
         $userParams["avatar_path"] = $avatar_path;
     }
 
@@ -241,11 +241,8 @@ if ($userParams === null)
 }
 else
 {
-    echo count($userParams) . count($_GET);
-    // foreach ($userParams as $u)
-    // {
-    //     echo $u . " ";
-    // }
+    // echo count($userParams) . " " . count($_POST) . " " . count($_GET) ." ";
+    print_r($_GET);
     $connection = connectDatabase();
     $userId = saveUserToDatabase($connection, $userParams);
     
@@ -255,7 +252,7 @@ else
     //     echo $u . " ";
     // }
 
-    $userId = saveUserToDatabaseWithClass($connection, $user);
+    //$userId = saveUserToDatabaseWithClass($connection, $user);
     $redirectUrl = "show_user_script.php/?user_id=$userId";
     header('Location: ' . $redirectUrl, true, 303);
     die();

@@ -1,6 +1,28 @@
 <?php
 require_once(__DIR__ . "/User.php");
-require_once(__DIR__ . "/register.php");
+
+function getConnectionParams(): array
+{   
+    $result = [];
+    $file = file_get_contents("config.json");
+    $data = json_decode($file, true);
+    $result["host"] = $data["database"]["host"];
+    $result["dbname"] = $data["database"]["dbname"];
+    $result["user"] = $data["database"]["user"];
+    $result["password"] = $data["database"]["password"];
+    return $result;
+}
+
+function connectDatabase(): PDO
+{
+    $connectionParams = getConnectionParams();
+    $host = $connectionParams["host"];
+    $dbname = $connectionParams["dbname"];
+    $dsn = "mysql:host=$host;dbname=$dbname;port=3306";
+    $user = $connectionParams["user"];
+    $password = $connectionParams["password"];
+    return new PDO($dsn, $user, $password);
+}
 
 function findUserInDatabase(PDO $connection, int $userId): ?array
 {
@@ -41,10 +63,8 @@ function findUserInDatabaseWithClass(PDO $connection, int $userId): ?User
 }
 
 $userId = (int)$_GET["user_id"];
-echo $userId;
 $connection = connectDatabase();
 $user = findUserInDatabase($connection, $userId);
-echo "Show_user_script";
 
 require_once __DIR__ . "/show_user.php";
 
