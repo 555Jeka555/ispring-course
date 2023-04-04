@@ -1,0 +1,16 @@
+{
+    "name": "2003/laba5",
+    "description": "Laba 5",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "555Jeka555"
+        }
+    ],
+    "require": {}
+}
