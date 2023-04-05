@@ -1,28 +1,7 @@
 <?php
 require_once(__DIR__ . "/User.php");
-
-function getConnectionParams(): array
-{   
-    $result = [];
-    $file = file_get_contents("config.json");
-    $data = json_decode($file, true);
-    $result["host"] = $data["database"]["host"];
-    $result["dbname"] = $data["database"]["dbname"];
-    $result["user"] = $data["database"]["user"];
-    $result["password"] = $data["database"]["password"];
-    return $result;
-}
-
-function connectDatabase(): PDO
-{
-    $connectionParams = getConnectionParams();
-    $host = $connectionParams["host"];
-    $dbname = $connectionParams["dbname"];
-    $dsn = "mysql:host=$host;dbname=$dbname;port=3306";
-    $user = $connectionParams["user"];
-    $password = $connectionParams["password"];
-    return new PDO($dsn, $user, $password);
-}
+require_once(__DIR__ . "/database.php");
+//TODO новый файл куда перенести общие функции
 
 function findUserInDatabase(PDO $connection, int $userId): ?array
 {
@@ -43,13 +22,13 @@ function findUserInDatabase(PDO $connection, int $userId): ?array
     return $row;
 }
 
-function findUserInDatabaseWithClass(PDO $connection, int $userId): ?User
+function findUserInDatabaseWithClass(PDO $connection, int $userId): User
 {
     $query = <<< SQL
         SELECT
             user_id, first_name, second_name, 
             middle_name, gender, birth_date, email, phone, avatar_path
-        FROM php_course
+        FROM user
         WHERE user_id = $userId
     SQL;
 
@@ -64,9 +43,8 @@ function findUserInDatabaseWithClass(PDO $connection, int $userId): ?User
 
 $userId = (int)$_GET["user_id"];
 $connection = connectDatabase();
-$user = findUserInDatabase($connection, $userId);
+// $user = findUserInDatabase($connection, $userId);
+// require_once __DIR__ . "/show_user.php";
 
-require_once __DIR__ . "/show_user.php";
-
-//$user = findUserInDatabaseWithClass($connection, $userId);
-//require __DIR__ . "/show_user_class.php";
+$user = findUserInDatabaseWithClass($connection, $userId);
+require __DIR__ . "/show_user_class.php";

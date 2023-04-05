@@ -8,6 +8,7 @@ class User {
     private string $gender; 
 	private string $birth_date;
 	private string $email;
+    //TODO $phone сделать string
 	private int $phone;
 	private string $avatar_path;
 
@@ -16,12 +17,12 @@ class User {
         $this->userId = $userId;
         $this->first_name = $first_name;
         $this->second_name = $second_name;
-        $this->$middle_name = $middle_name;
-        $this->$gender = $gender; 
-        $this->$birth_date = $birth_date;
-        $this->$email = $email;
-        $this->$phone = $phone;
-        $this->$avatar_path = $avatar_path;
+        $this->middle_name = $middle_name;
+        $this->gender = $gender; 
+        $this->birth_date = $birth_date;
+        $this->email = $email;
+        $this->phone = $phone;
+        $this->avatar_path = $avatar_path;
     }
 
     public function getUserId(): ?int

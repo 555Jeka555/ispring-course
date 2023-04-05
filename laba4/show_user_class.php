@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
     <meta charset="utf-8">
-    <title>laba2/3</title>
+    <title>laba4</title>
 </head>
 <body>
     <div>

@@ -1,174 +1,80 @@
 <?php
 
 require_once(__DIR__ . "/User.php");
+require_once(__DIR__ . "/database.php");
 
-// function findUserInDatabase(PDO $connection, int $userId): ?array
-// {
-//     $query = <<< SQL
-//         SELECT
-//             user_id, first_name, second_name, 
-//             middle_name, gender, birth_date, email, phone, avatar_path
-//         FROM user
-//         WHERE user_id = $userId
-//     SQL;
 
-//     $statement = $connection->query($query);
-//     $row = $statement->fetch(PDO::FETCH_ASSOC);
-//     if (!$row)
-//     {
-//         throw new RuntimeException("User with id $userId not found");
-//     }
-//     return $row;
-// }
-
-function collectData(array $userParams): array|null
+//TODO use array_fillter 
+function collectData(array $userParams): array
 {
-    $error = false;
-    if (isset($_POST["second_name"]))
+   
+    $USER_FIELDS = ["second_name", "first_name", "middle_name", "gender", "birth_date", "avatar_path"];
+    foreach ($USER_FIELDS as $key)
     {
-        $second_name = $_POST["second_name"];
-        $userParams["second_name"] = $second_name;
-        if (count(array_filter(str_split($second_name), "is_numeric")) > 0 ) $error = true;
+        if (isset($_POST[$key]))
+        {
+            $userParams[$key] = $_POST[$key];
+        }
     }
-    if (isset($_POST["first_name"]))
-    {
-        $first_name = $_POST["first_name"];
-        $userParams["first_name"] = $first_name;
-        if (count(array_filter(str_split($first_name), "is_numeric")) > 0) $error = true;
-    }
-    if (isset($_POST["middle_name"]))
-    {
-        $middle_name = $_POST["middle_name"];
-        $userParams["middle_name"] = $middle_name;
-        if (count(array_filter(str_split($middle_name), "is_numeric")) > 0) $error = true;
-    }
-    if (isset($_POST["gender"]))
-    {
-        $gender = $_POST["gender"];
-        $userParams["gender"] = $gender;
-    }
-    if (isset($_POST["birth_date"]))
-    {
-        $birth_date = $_POST["birth_date"];
-        $userParams["birth_date"] = $birth_date;
-    }
+
     if (isset($_POST["email"]))
     {
         $email = $_POST["email"];
         $userParams["email"] = $email;
-        $email_validation_regex = '/^\\S+@\\S+\\.\\S+$/'; 
-        if (!(preg_match($email_validation_regex, $email))) $error = true;
+        $email_validation_regex = "/^\\S+@\\S+\\.\\S+$/"; 
+        if (!(preg_match($email_validation_regex, $email))) 
+        {
+            throw new RuntimeException("Неккоректный ввод");
+        }
+        
     }
     if (isset($_POST["phone"]))
     {
         $phone = $_POST["phone"];
-        if (!is_numeric($phone)) $error = true;
-        if (!$error)
+        if (!is_numeric($phone)) 
         {
-            $userParams["phone"] = (int)$phone;
+            throw new RuntimeException("Неккоректный ввод");
         }
+        $userParams["phone"] = (int)$phone;
+        
     }
-    if (isset($_POST["avatar_path"]))
-    {
-        $avatar_path = $_POST["avatar_path"];
-        $userParams["avatar_path"] = $avatar_path;
-    }
-
-    if ($error)
-    {
-        return null;
-    }
-    else
-    {
-        return $userParams;
-    }
+    return $userParams;
 }
 
-function collectDataInClass(): User|null
+
+function collectDataInClass(array $userParams): User
 {
-    $error = false;
-    $userParams = [];
-    if (isset($_POST["second_name"]))
+   
+    $USER_FIELDS = ["second_name", "first_name", "middle_name", "gender", "birth_date", "avatar_path"];
+    foreach ($USER_FIELDS as $key)
     {
-        $second_name = $_POST["second_name"];
-        $userParams["second_name"] = $second_name;
-        if (count(array_filter(str_split($second_name), "is_numeric")) > 0 ) $error = true;
+        if (isset($_POST[$key]))
+        {
+            $userParams[$key] = $_POST[$key];
+        }
     }
-    if (isset($_POST["first_name"]))
-    {
-        $first_name = $_POST["first_name"];
-        $userParams["first_name"] = $first_name;
-        if (count(array_filter(str_split($first_name), "is_numeric")) > 0) $error = true;
-    }
-    if (isset($_POST["middle_name"]))
-    {
-        $middle_name = $_POST["middle_name"];
-        $userParams["middle_name"] = $middle_name;
-        if (count(array_filter(str_split($middle_name), "is_numeric")) > 0) $error = true;
-    }
-    if (isset($_POST["gender"]))
-    {
-        $gender = $_POST["gender"];
-        $userParams["gender"] = $gender;
-    }
-    if (isset($_POST["birth_date"]))
-    {
-        $birth_date = $_POST["birth_date"];
-        $userParams["birth_date"] = $birth_date;
-    }
+
     if (isset($_POST["email"]))
     {
         $email = $_POST["email"];
         $userParams["email"] = $email;
-        $email_validation_regex = '/^\\S+@\\S+\\.\\S+$/'; 
-        if (!(preg_match($email_validation_regex, $email))) $error = true;
+        $email_validation_regex = "/^\\S+@\\S+\\.\\S+$/"; 
+        if (!(preg_match($email_validation_regex, $email))) 
+        {
+            throw new RuntimeException("Неккоректный ввод");   
+        }
     }
     if (isset($_POST["phone"]))
     {
         $phone = $_POST["phone"];
-        if (!is_numeric($phone)) $error = true;
-        if (!$error)
+        if (!is_numeric($phone)) 
         {
-            $userParams["phone"] = (int)$phone;
+            throw new RuntimeException("Неккоректный ввод");
         }
+        $userParams["phone"] = (int)$phone;
+        
     }
-    if (isset($_POST["avatar_path"]))
-    {
-        $avatar_path = $_POST["avatar_path"];
-        $userParams["avatar_path"] = $avatar_path;
-    }
-
-    if ($error)
-    {
-        return null;
-    }
-    else
-    {
-        return new User(null, $userParams["first_name"], $userParams["second_name"], $userParams["middle_name"], $userParams["gender"], $userParams["birth_date"], $userParams["email"], $userParams["phone"], $userParams["avatar_path"]);
-    }
-}
-
-function getConnectionParams(): array
-{   
-    $result = [];
-    $file = file_get_contents("config.json");
-    $data = json_decode($file, true);
-    $result["host"] = $data["database"]["host"];
-    $result["dbname"] = $data["database"]["dbname"];
-    $result["user"] = $data["database"]["user"];
-    $result["password"] = $data["database"]["password"];
-    return $result;
-}
-
-function connectDatabase(): PDO
-{
-    $connectionParams = getConnectionParams();
-    $host = $connectionParams["host"];
-    $dbname = $connectionParams["dbname"];
-    $dsn = "mysql:host=$host;dbname=$dbname;port=3306";
-    $user = $connectionParams["user"];
-    $password = $connectionParams["password"];
-    return new PDO($dsn, $user, $password);
+    return new User(null, $userParams["first_name"], $userParams["second_name"], $userParams["middle_name"], $userParams["gender"], $userParams["birth_date"], $userParams["email"], $userParams["phone"], $userParams["avatar_path"]);
 }
 
 function saveUserToDatabase(PDO $connection, array $userParams): int
@@ -197,12 +103,13 @@ function saveUserToDatabase(PDO $connection, array $userParams): int
     }
     catch (Exception $e)
     {
+        //TODO Отдавать 400 код статуса
         echo "Такой пользователь уже создан ";
-        echo $e->getMessage();
+        //echo $e->getMessage();
+        header("Status: 400 Bad Request", true, 400);
         exit();
     }
     
-
     return $connection->lastInsertId();
 }
 
@@ -215,46 +122,40 @@ function saveUserToDatabaseWithClass(PDO $connection, User $user): int
              :birth_date, :email, :phone, :avatar_path
             )
     SQL;
-
-    $statement = $connection->prepare($query);
-    $statement->execute([
-        ":first_name" => $user->getFirstName(), 
-        ":second_name" => $user->getSecondName(),
-        ":middle_name" => $user->getMiddleName(), 
-        ":gender" => $user->getGender(),
-        ":birth_date" => $user->getBirthDate(), 
-        ":email" => $user->getEmail(),
-        ":phone" => $user->getPhone(), 
-        ":avatar_path" => $user->getAvatarPath()
-    ]);
+    try
+    {
+        $statement = $connection->prepare($query);
+        $statement->execute([
+            ":first_name" => $user->getFirstName(), 
+            ":second_name" => $user->getSecondName(),
+            ":middle_name" => $user->getMiddleName(), 
+            ":gender" => $user->getGender(),
+            ":birth_date" => $user->getBirthDate(), 
+            ":email" => $user->getEmail(),
+            ":phone" => $user->getPhone(), 
+            ":avatar_path" => $user->getAvatarPath()
+        ]);
+    }
+    catch (Exception $e)
+    {
+        //TODO Отдавать 400 код статуса
+        echo "Такой пользователь уже создан ";
+        //echo $e->getMessage();
+        header("Status: 400 Bad Request", true, 400);
+        exit();
+    }
 
     return $connection->lastInsertId();
 }
 
 $userParams = [];
-$userParams = collectData($userParams);
+//$userParams = collectData($userParams);
+$user = collectDataInClass($userParams);
 
-//$user = collectDataInClass();
-if ($userParams === null)
-{
-    echo "Данные введены не правильно, попробуйте ещё раз";
-}
-else
-{
-    // echo count($userParams) . " " . count($_POST) . " " . count($_GET) ." ";
-    print_r($_GET);
-    $connection = connectDatabase();
-    $userId = saveUserToDatabase($connection, $userParams);
-    
-    // $array = findUserInDatabase($connection, $userId);
-    // foreach ($array as $u)
-    // {
-    //     echo $u . " ";
-    // }
+$connection = connectDatabase();
+// $userId = saveUserToDatabase($connection, $userParams);
+$userId = saveUserToDatabaseWithClass($connection, $user);
 
-    //$userId = saveUserToDatabaseWithClass($connection, $user);
-    $redirectUrl = "show_user_script.php/?user_id=$userId";
-    header('Location: ' . $redirectUrl, true, 303);
-    die();
-}
-
+$redirectUrl = "show_user_script.php/?user_id=$userId";
+header("Location: " . $redirectUrl, true, 303);
+die();
