@@ -19,14 +19,14 @@ class UserController
 
     public function index(): void
     {
-        require __DIR__ . "/../View/form.php";
+        require __DIR__  . "/../View/form.php";
     }
 
     public function registerUser(array $requestData): void
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+        if ($_SERVER["REQUEST_METHOD"] !== "POST")
         {
-            $this->writeRedirectSeeOther('/');
+            $this->writeRedirectSeeOther("/");
             return;
         }
 
@@ -36,7 +36,7 @@ class UserController
             $requestData["email"], $requestData["phone"], $requestData["avatar_path"]
         );
         $userId = $this->userTable->saveUser($user);
-        $this->writeRedirectSeeOther("/show_user.php?user_id=$userId");
+        $this->writeRedirectSeeOther("/show_user.php?user_id=$userId"); // __DIR__ . "/../../public/show_user.php?user_id=$userId"
     }
 
     public function showUser(array $queryParams): void
@@ -44,22 +44,22 @@ class UserController
         $userId = (int)$queryParams["user_id"];
         if (!$userId)
         {
-            $this->writeRedirectSeeOther('/');
+            $this->writeRedirectSeeOther("/");
             exit();
         }
-        $uesr = $this->userTable->findUser($userId);
-        if (!$uesr)
+        $user = $this->userTable->findUser($userId);
+        if (!$user)
         {
-            $this->writeRedirectSeeOther('/');
+            $this->writeRedirectSeeOther("/");
             exit();
         }
-
-        require __DIR__ . '/../View/user.php';
+        // echo "User " . $user->getEmail();
+        require __DIR__ . "/../View/user.php";
     }
 
     private function writeRedirectSeeOther(string $url): void
     {
-        header('Location: ' . $url, true, self::HTTP_STATUS_303_SEE_OTHER);
+        header("Location: " . $url, true, self::HTTP_STATUS_303_SEE_OTHER);
     }
 
 }

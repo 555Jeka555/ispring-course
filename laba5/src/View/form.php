@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <head>
     <meta charset="utf-8">
-    <title>laba2/3</title>
+    <title>laba5</title>
 </head>
 <body>
-    <form action="save_user.php" method="POST">
+    <form action="/add_user.php" method="POST">
         <p>Фамилия : <input type="text" name="second_name" required/></p>
         <p>Имя : <input type="text" name="first_name" required/></p>
         <p>Отчество : <input type="text" name="middle_name"/></p>

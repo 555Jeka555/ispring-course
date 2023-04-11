@@ -25,10 +25,9 @@ class UserTable
         SQL;
     
         $statement = $this->connection->query($query);
-        $row = $statement->fetch(\PDO::FETCH_ASSOC);
         if ($row = $statement->fetch(\PDO::FETCH_ASSOC))
         {
-            return $this->createPostFromRow($row);
+            return $this->createUserFromRow($row);
         }
 
         return null;
@@ -59,10 +58,10 @@ class UserTable
         return (int)$this->connection->lastInsertId();
     }
 
-    private function createPostFromRow(array $row): User
+    private function createUserFromRow(array $row): User
     {
         return new User(
-            $row["id"], $row["first_name"], $row["second_name"],
+            (int)$row["user_id"], $row["first_name"], $row["second_name"],
             $row["middle_name"], $row["gender"], $row["birth_date"],
             $row["email"], $row["phone"], $row["avatar_path"]
         );

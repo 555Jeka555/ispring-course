@@ -7,7 +7,7 @@ class ConnectionProvider
 
     public static function connectDatabase(): \PDO
     {
-        $file = file_get_contents("/../Data/config.json");
+        $file = file_get_contents(__DIR__ . "/config.json");
         $data = json_decode($file, true)["database"];
         $host = $data["host"];
         $dbname = $data["dbname"];
