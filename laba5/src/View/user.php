@@ -1,6 +1,7 @@
 <?php
 /**
  * @var App\Model\User $user
+ * @var App\Model\Upload $upload
  */
 ?>
 
@@ -24,7 +25,7 @@
             <h3><?= htmlentities($user->getPhone()) ?></h3>
         <?php endif; ?>
         <?php if ($user->getAvatarPath()) : ?>
-            <h3><?= htmlentities($user->getAvatarPath()) ?></h3>
+            <img src="<?= htmlentities($upload->getUploadUrlPath($user->getAvatarPath())) ?>" alt="ill" >
         <?php endif; ?>
     </div>
 </body>

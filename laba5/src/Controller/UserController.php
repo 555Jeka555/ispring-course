@@ -1,20 +1,24 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller;
 
 use App\Database\ConnectionProvider;
 use App\Database\UserTable;
 use App\Model\User;
+use App\Model\Upload;
 
 class UserController
 {
     private const HTTP_STATUS_303_SEE_OTHER = 303;
-    private UserTable $userTable;    
+    private UserTable $userTable;
+    private Upload $upload;
 
     public function __construct()
     {
         $connection = ConnectionProvider::connectDatabase();
         $this->userTable = new UserTable($connection);
+        $this->upload = new Upload();
     }
 
     public function index(): void
@@ -30,13 +34,21 @@ class UserController
             return;
         }
 
+        // $user = new User(
+        //     null, $requestData["first_name"], $requestData["second_name"],
+        //     $requestData["middle_name"], $requestData["gender"], $requestData["birth_date"],
+        //     $requestData["email"], $requestData["phone"], $requestData["avatar_path"]
+        // );
+
+        $illustrationPath = $this->upload->moveImageToUploads($_FILES["avatar_path"]);
         $user = new User(
             null, $requestData["first_name"], $requestData["second_name"],
             $requestData["middle_name"], $requestData["gender"], $requestData["birth_date"],
-            $requestData["email"], $requestData["phone"], $requestData["avatar_path"]
+            $requestData["email"], (int)$requestData["phone"], $illustrationPath
         );
+
         $userId = $this->userTable->saveUser($user);
-        $this->writeRedirectSeeOther("/show_user.php?user_id=$userId"); // __DIR__ . "/../../public/show_user.php?user_id=$userId"
+        $this->writeRedirectSeeOther("/show_user.php?user_id=$userId");
     }
 
     public function showUser(array $queryParams): void
@@ -53,7 +65,7 @@ class UserController
             $this->writeRedirectSeeOther("/");
             exit();
         }
-        // echo "User " . $user->getEmail();
+        $upload = $this->upload;
         require __DIR__ . "/../View/user.php";
     }
 

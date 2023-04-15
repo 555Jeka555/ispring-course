@@ -14,7 +14,7 @@ class UserTable
         $this->connection = $connection;
     }
 
-    public function findUser( int $userId): ?User
+    public function findUser(int $userId): ?User
     {
         $query = <<< SQL
             SELECT
