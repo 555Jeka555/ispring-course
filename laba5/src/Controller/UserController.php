@@ -33,14 +33,13 @@ class UserController
             $this->writeRedirectSeeOther("/");
             return;
         }
-
-        // $user = new User(
-        //     null, $requestData["first_name"], $requestData["second_name"],
-        //     $requestData["middle_name"], $requestData["gender"], $requestData["birth_date"],
-        //     $requestData["email"], $requestData["phone"], $requestData["avatar_path"]
-        // );
-
-        $illustrationPath = $this->upload->moveImageToUploads($_FILES["avatar_path"]);
+        
+        $illustrationPath = "null";
+        if ($_FILES["avatar_path"]["name"] !== "")
+        {
+            $illustrationPath = $this->upload->moveImageToUploads($_FILES["avatar_path"]);
+        }
+        
         $user = new User(
             null, $requestData["first_name"], $requestData["second_name"],
             $requestData["middle_name"], $requestData["gender"], $requestData["birth_date"],

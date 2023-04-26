@@ -24,7 +24,7 @@
         <?php if ($user->getPhone()) : ?>
             <h3><?= htmlentities($user->getPhone()) ?></h3>
         <?php endif; ?>
-        <?php if ($user->getAvatarPath()) : ?>
+        <?php if ($user->getAvatarPath() !== "null") : ?>
             <img src="<?= htmlentities($upload->getUploadUrlPath($user->getAvatarPath())) ?>" alt="ill" >
         <?php endif; ?>
     </div>

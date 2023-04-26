@@ -33,10 +33,10 @@ class UserTable
         return null;
     }
 
-    function saveUser(User $user): int
+    public function saveUser(User $user): int
     {
         $query = <<< SQL
-            INSERT INTO user  (first_name, second_name, 
+            INSERT INTO user (first_name, second_name, 
                 middle_name, gender, birth_date, email, phone, avatar_path)
             VALUES (:first_name, :second_name, :middle_name, :gender,
                 :birth_date, :email, :phone, :avatar_path
@@ -55,6 +55,11 @@ class UserTable
             ":avatar_path" => $user->getAvatarPath()
         ]);
 
+        return (int)$this->connection->lastInsertId();
+    }
+
+    public function getLastId(): int
+    {
         return (int)$this->connection->lastInsertId();
     }
 
